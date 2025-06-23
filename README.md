@@ -1,5 +1,7 @@
 # ⚡ Surge
 
+# 🔒 This project is **closed-source**. You’re free to explore, but copying or reusing any code is strictly **forbidden**.
+
 Welcome to **Surge** — the ultimate student-made gaming platform. Fast, clean, and designed to work anywhere — even on locked-down school Wi-Fi.
 
 > 🚫 **This is a private project. Cloning, forking, copying, redistributing, or reusing any part of this repository is strictly prohibited.**  
