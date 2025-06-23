@@ -1,5 +1,10 @@
 # ⚡ Surge
 
+![License: All Rights Reserved](https://img.shields.io/badge/license-All%20Rights%20Reserved-red.svg)
+![Made by Students](https://img.shields.io/badge/made%20by-students-blue)
+![Not Open Source](https://img.shields.io/badge/open%20source-no-black)
+![Do Not Fork](https://img.shields.io/badge/forking-not%20allowed-orange)
+
 🔒 This project is **closed-source**. You’re free to explore, but copying or reusing any code is strictly **forbidden**.
 
 Welcome to **Surge** — the ultimate student-made gaming platform. Fast, clean, and designed to work anywhere — even on locked-down school Wi-Fi.
