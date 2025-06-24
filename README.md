@@ -1,30 +1,14 @@
 # ⚡ Surge
 
 <p align="center">
-  <!-- Standard Badges -->
-  <a href="https://surgeofficial.github.io"><img src="https://img.shields.io/badge/site-live-brightgreen?style=for-the-badge" /></a>
+  <a href="https://surgeofficial.github.io">
+    <img src="https://img.shields.io/badge/site-live-brightgreen?style=for-the-badge" />
+  </a>
   <img src="https://img.shields.io/badge/license-All%20Rights%20Reserved-red?style=for-the-badge" />
   <img src="https://img.shields.io/badge/open%20source-no-black?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/forking-not%20allowed-orange?style=for-the-badge" />
   <img src="https://img.shields.io/badge/made%20by-students-blue?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/hosted%20on-GitHub%20Pages-ff69b4?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/status-active-success?style=for-the-badge" />
   <img src="https://img.shields.io/github/last-commit/surgeofficial/surgeofficial.github.io?style=for-the-badge" />
-  <img src="https://img.shields.io/github/languages/top/surgeofficial/surgeofficial.github.io?style=for-the-badge" />
-  <img src="https://img.shields.io/github/repo-size/surgeofficial/surgeofficial.github.io?style=for-the-badge" />
-  <img src="https://img.shields.io/github/stars/surgeofficial/surgeofficial.github.io?style=for-the-badge" />
-  <!-- Custom Vibe Badges -->
-  <img src="https://img.shields.io/badge/🔒-PRIVATE-red?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/⚡-GAMES-yellow?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/🎮-UNBLOCKED-green?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/🧠-STUDENT--BUILT-blue?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/🚀-FAST%20LOAD%20TIMES-brightgreen?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/🎯-GAME%20LAUNCHER-purple?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/🤖-BROWSER--BASED-lightgrey?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/👾-HTML5%20GAMES-orange?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/📵-NO%20CLONES%20ALLOWED-black?style=for-the-badge" />
-  <!-- View Counter -->
-  <img src="https://visitor-badge.glitch.me/badge?page_id=surgeofficial.surgeofficial.github.io&style=for-the-badge&color=blue" alt="visitors" />
+  <img src="https://img.shields.io/badge/Visitors-3.2K%20this%20month-brightgreen?style=for-the-badge" />
 </p>
 
 ---
