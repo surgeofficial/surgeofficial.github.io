@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/badge/open%20source-no-black?style=for-the-badge" />
   <img src="https://img.shields.io/badge/made%20by-students-blue?style=for-the-badge" />
   <img src="https://img.shields.io/github/last-commit/surgeofficial/surgeofficial.github.io?style=for-the-badge" />
-  <img src="https://img.shields.io/badge/Visitors-3.2K%20this%20month-brightgreen?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/Visitors-0%20this%20month-brightgreen?style=for-the-badge" />
 </p>
 
 ---
