@@ -122,6 +122,6 @@ Set `new: true` to show a "NEW" badge on your game.
 
 ## 🎮 That's It!
 
-Your games are now part of your site permanently. Just simple file management!
+Your games are now part of your site permanently. No admin panels, no databases - just simple file management!
 
 The games will load instantly when users click "Play Now" and will be embedded directly in your site.

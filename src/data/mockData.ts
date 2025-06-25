@@ -167,6 +167,9 @@ export const mockChallenges: Challenge[] = [
     reward: 25,
     expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
     completed: false,
+    progress: 0,
+    difficulty: 'Medium',
+    category: ''
   },
   {
     id: '2',
@@ -177,6 +180,9 @@ export const mockChallenges: Challenge[] = [
     reward: 100,
     expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     completed: false,
+    progress: 0,
+    difficulty: 'Medium',
+    category: ''
   },
 ];
 
