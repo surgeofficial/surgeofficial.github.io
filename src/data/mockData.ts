@@ -5,7 +5,7 @@ export const mockGames: Game[] = [
     id: '1',
     title: 'Basketball Random',
     description: 'Fast-paced basketball game with retro pixel graphics',
-    thumbnail: 'public/games/basketballRandom/splash.jpeg',
+    thumbnail: '/public/games/basketballRandom/splash.jpeg',
     category: 'Sports',
     tags: ['basketball', 'pixel', 'sports'],
     rating: 4,
