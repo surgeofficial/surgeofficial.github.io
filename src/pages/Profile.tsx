@@ -20,68 +20,76 @@ import {
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { useAuth } from '../hooks/useAuth';
-import { mockUser } from '../data/mockData';
-import { getDailyShopRotation } from '../data/shopItems';
+import { useUserData } from '../hooks/useUserData';
 
 export const Profile: React.FC = () => {
   const { user } = useAuth();
+  const { 
+    profile, 
+    shopItems, 
+    updateProfile, 
+    equipShopItem,
+    getEquippedItems,
+    loading 
+  } = useUserData();
+  
   const [isEditing, setIsEditing] = useState(false);
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved'>('idle');
   const [profileData, setProfileData] = useState({
-    username: mockUser.username,
-    status: mockUser.status || '',
-    avatar: mockUser.avatar,
-    surgeCoins: mockUser.surgeCoins,
-    level: mockUser.level
+    username: profile?.username || '',
+    display_name: profile?.display_name || '',
+    status: profile?.status || '',
+    avatar_url: profile?.avatar_url || ''
   });
 
-  // Equipment state
-  const [equippedItems, setEquippedItems] = useState({
-    avatar: 'avatar-1',
-    theme: 'theme-1',
-    badge: 'badge-1'
-  });
+  // Update local state when profile loads
+  React.useEffect(() => {
+    if (profile) {
+      setProfileData({
+        username: profile.username,
+        display_name: profile.display_name || '',
+        status: profile.status,
+        avatar_url: profile.avatar_url || ''
+      });
+    }
+  }, [profile]);
 
-  // Owned items (from shop purchases)
-  const [ownedItems] = useState(['avatar-1', 'theme-1', 'badge-1', 'avatar-2', 'theme-3', 'badge-2']);
-
-  // Get available items from shop
-  const shopItems = getDailyShopRotation();
-  const ownedAvatars = shopItems.filter(item => item.category === 'avatar' && ownedItems.includes(item.id));
-  const ownedThemes = shopItems.filter(item => item.category === 'theme' && ownedItems.includes(item.id));
-  const ownedBadges = shopItems.filter(item => item.category === 'badge' && ownedItems.includes(item.id));
+  const equippedItems = getEquippedItems();
+  const ownedAvatars = shopItems.filter(item => item.item_id.startsWith('avatar-') && item.owned);
+  const ownedThemes = shopItems.filter(item => item.item_id.startsWith('theme-') && item.owned);
+  const ownedBadges = shopItems.filter(item => item.item_id.startsWith('badge-') && item.owned);
 
   const stats = [
-    { icon: Zap, label: 'Surge Coins', value: profileData.surgeCoins, color: 'text-primary-500' },
-    { icon: Trophy, label: 'Level', value: profileData.level, color: 'text-secondary-500' },
-    { icon: Award, label: 'Achievements', value: mockUser.achievements.length, color: 'text-accent-500' },
-    { icon: Star, label: 'Favorites', value: mockUser.favorites.length, color: 'text-yellow-500' },
+    { icon: Zap, label: 'Surge Coins', value: profile?.surge_coins || 0, color: 'text-primary-500' },
+    { icon: Trophy, label: 'Level', value: profile?.level || 1, color: 'text-secondary-500' },
+    { icon: Award, label: 'Games Played', value: profile?.games_played || 0, color: 'text-accent-500' },
+    { icon: Star, label: 'Playtime', value: `${Math.floor((profile?.total_playtime || 0) / 60)}h`, color: 'text-yellow-500' },
   ];
 
-  const recentAchievements = mockUser.achievements.slice(0, 3);
-  const levelProgress = ((profileData.level % 1) * 100);
-  const nextLevel = Math.floor(profileData.level) + 1;
+  const levelProgress = ((profile?.experience_points || 0) % 1000) / 10; // Assuming 1000 XP per level
+  const nextLevel = (profile?.level || 1) + 1;
 
   const handleSaveProfile = async () => {
     setSaveStatus('saving');
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setSaveStatus('saved');
-    setTimeout(() => setSaveStatus('idle'), 2000);
-    setIsEditing(false);
+    try {
+      await updateProfile(profileData);
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error saving profile:', error);
+      setSaveStatus('idle');
+    }
   };
 
-  const handleEquipItem = (itemId: string, category: string) => {
-    setEquippedItems(prev => ({
-      ...prev,
-      [category]: itemId
-    }));
+  const handleEquipItem = async (itemId: string) => {
+    const category = itemId.split('-')[0]; // Extract category from item ID
+    await equipShopItem(itemId, category);
   };
 
   const getEquippedItemName = (category: string) => {
-    const equippedId = equippedItems[category as keyof typeof equippedItems];
-    const item = shopItems.find(item => item.id === equippedId);
-    return item?.name || 'None';
+    const equippedItem = equippedItems.find(item => item.item_id.startsWith(category));
+    return equippedItem?.item_id.replace(`${category}-`, '').replace(/([A-Z])/g, ' $1').trim() || 'None';
   };
 
   if (!user) {
@@ -106,6 +114,17 @@ export const Profile: React.FC = () => {
     );
   }
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading your profile...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -119,14 +138,14 @@ export const Profile: React.FC = () => {
             {/* Avatar */}
             <div className="relative">
               <img
-                src={profileData.avatar}
+                src={profileData.avatar_url || 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=100&h=100&fit=crop'}
                 alt="Profile"
                 className="w-32 h-32 rounded-full border-4 border-primary-500 shadow-lg"
               />
               
               {/* Level Badge */}
               <div className="absolute -top-2 -right-2 bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-full w-12 h-12 flex items-center justify-center font-bold shadow-lg">
-                {profileData.level}
+                {profile?.level || 1}
               </div>
             </div>
 
@@ -135,17 +154,20 @@ export const Profile: React.FC = () => {
               <div className="flex items-center justify-center md:justify-start space-x-3 mb-2">
                 {isEditing ? (
                   <Input
-                    value={profileData.username}
-                    onChange={(e) => setProfileData({...profileData, username: e.target.value})}
+                    value={profileData.display_name}
+                    onChange={(e) => setProfileData({...profileData, display_name: e.target.value})}
                     className="text-3xl font-bold bg-transparent border-b-2 border-primary-500 text-gray-900 dark:text-white focus:outline-none max-w-xs"
+                    placeholder="Display Name"
                   />
                 ) : (
                   <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-                    {profileData.username}
+                    {profileData.display_name || profileData.username}
                   </h1>
                 )}
                 <Crown className="h-6 w-6 text-yellow-500" />
               </div>
+              
+              <p className="text-gray-500 dark:text-gray-400 mb-2">@{profileData.username}</p>
               
               {isEditing ? (
                 <Input
@@ -164,7 +186,7 @@ export const Profile: React.FC = () => {
               <div className="mb-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    Level {profileData.level} → {nextLevel}
+                    Level {profile?.level || 1} → {nextLevel}
                   </span>
                   <span className="text-sm text-gray-500 dark:text-gray-400">
                     {Math.round(levelProgress)}%
@@ -242,7 +264,7 @@ export const Profile: React.FC = () => {
                   >
                     <stat.icon className={`h-8 w-8 ${stat.color} mx-auto mb-2`} />
                     <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                      {stat.value.toLocaleString()}
+                      {typeof stat.value === 'number' ? stat.value.toLocaleString() : stat.value}
                     </div>
                     <div className="text-sm text-gray-600 dark:text-gray-400">
                       {stat.label}
@@ -297,156 +319,120 @@ export const Profile: React.FC = () => {
               {/* Equipment Tabs */}
               <div className="space-y-6">
                 {/* Avatars */}
-                <div>
-                  <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center space-x-2">
-                    <Crown className="h-5 w-5 text-primary-500" />
-                    <span>Avatars ({ownedAvatars.length})</span>
-                  </h4>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {ownedAvatars.map((item) => (
-                      <div
-                        key={item.id}
-                        className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
-                          equippedItems.avatar === item.id
-                            ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
-                            : 'border-gray-200 dark:border-gray-600 hover:border-primary-300'
-                        }`}
-                        onClick={() => handleEquipItem(item.id, 'avatar')}
-                      >
-                        <div className="text-center">
-                          <Crown className="h-8 w-8 mx-auto mb-2 text-primary-500" />
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            {item.name}
-                          </p>
-                          {equippedItems.avatar === item.id && (
-                            <Check className="h-4 w-4 text-primary-500 mx-auto mt-1" />
-                          )}
+                {ownedAvatars.length > 0 && (
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center space-x-2">
+                      <Crown className="h-5 w-5 text-primary-500" />
+                      <span>Avatars ({ownedAvatars.length})</span>
+                    </h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {ownedAvatars.map((item) => (
+                        <div
+                          key={item.item_id}
+                          className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                            item.equipped
+                              ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                              : 'border-gray-200 dark:border-gray-600 hover:border-primary-300'
+                          }`}
+                          onClick={() => handleEquipItem(item.item_id)}
+                        >
+                          <div className="text-center">
+                            <Crown className="h-8 w-8 mx-auto mb-2 text-primary-500" />
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">
+                              {item.item_id.replace('avatar-', '').replace(/([A-Z])/g, ' $1').trim()}
+                            </p>
+                            {item.equipped && (
+                              <Check className="h-4 w-4 text-primary-500 mx-auto mt-1" />
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Themes */}
-                <div>
-                  <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center space-x-2">
-                    <Palette className="h-5 w-5 text-secondary-500" />
-                    <span>Themes ({ownedThemes.length})</span>
-                  </h4>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {ownedThemes.map((item) => (
-                      <div
-                        key={item.id}
-                        className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
-                          equippedItems.theme === item.id
-                            ? 'border-secondary-500 bg-secondary-50 dark:bg-secondary-900/20'
-                            : 'border-gray-200 dark:border-gray-600 hover:border-secondary-300'
-                        }`}
-                        onClick={() => handleEquipItem(item.id, 'theme')}
-                      >
-                        <div className="text-center">
-                          <Palette className="h-8 w-8 mx-auto mb-2 text-secondary-500" />
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            {item.name}
-                          </p>
-                          {equippedItems.theme === item.id && (
-                            <Check className="h-4 w-4 text-secondary-500 mx-auto mt-1" />
-                          )}
+                {ownedThemes.length > 0 && (
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center space-x-2">
+                      <Palette className="h-5 w-5 text-secondary-500" />
+                      <span>Themes ({ownedThemes.length})</span>
+                    </h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {ownedThemes.map((item) => (
+                        <div
+                          key={item.item_id}
+                          className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                            item.equipped
+                              ? 'border-secondary-500 bg-secondary-50 dark:bg-secondary-900/20'
+                              : 'border-gray-200 dark:border-gray-600 hover:border-secondary-300'
+                          }`}
+                          onClick={() => handleEquipItem(item.item_id)}
+                        >
+                          <div className="text-center">
+                            <Palette className="h-8 w-8 mx-auto mb-2 text-secondary-500" />
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">
+                              {item.item_id.replace('theme-', '').replace(/([A-Z])/g, ' $1').trim()}
+                            </p>
+                            {item.equipped && (
+                              <Check className="h-4 w-4 text-secondary-500 mx-auto mt-1" />
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Badges */}
-                <div>
-                  <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center space-x-2">
-                    <Trophy className="h-5 w-5 text-accent-500" />
-                    <span>Badges ({ownedBadges.length})</span>
-                  </h4>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    {ownedBadges.map((item) => (
-                      <div
-                        key={item.id}
-                        className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
-                          equippedItems.badge === item.id
-                            ? 'border-accent-500 bg-accent-50 dark:bg-accent-900/20'
-                            : 'border-gray-200 dark:border-gray-600 hover:border-accent-300'
-                        }`}
-                        onClick={() => handleEquipItem(item.id, 'badge')}
-                      >
-                        <div className="text-center">
-                          <Trophy className="h-8 w-8 mx-auto mb-2 text-accent-500" />
-                          <p className="text-sm font-medium text-gray-900 dark:text-white">
-                            {item.name}
-                          </p>
-                          {equippedItems.badge === item.id && (
-                            <Check className="h-4 w-4 text-accent-500 mx-auto mt-1" />
-                          )}
+                {ownedBadges.length > 0 && (
+                  <div>
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-center space-x-2">
+                      <Trophy className="h-5 w-5 text-accent-500" />
+                      <span>Badges ({ownedBadges.length})</span>
+                    </h4>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                      {ownedBadges.map((item) => (
+                        <div
+                          key={item.item_id}
+                          className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                            item.equipped
+                              ? 'border-accent-500 bg-accent-50 dark:bg-accent-900/20'
+                              : 'border-gray-200 dark:border-gray-600 hover:border-accent-300'
+                          }`}
+                          onClick={() => handleEquipItem(item.item_id)}
+                        >
+                          <div className="text-center">
+                            <Trophy className="h-8 w-8 mx-auto mb-2 text-accent-500" />
+                            <p className="text-sm font-medium text-gray-900 dark:text-white">
+                              {item.item_id.replace('badge-', '').replace(/([A-Z])/g, ' $1').trim()}
+                            </p>
+                            {item.equipped && (
+                              <Check className="h-4 w-4 text-accent-500 mx-auto mt-1" />
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
+                )}
 
-            {/* Recent Activity */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Recent Activity
-              </h2>
-              <div className="space-y-4">
-                <div className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                  <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                    <Trophy className="h-5 w-5 text-green-500" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      Completed "Daily Gamer" challenge
+                {/* No items message */}
+                {ownedAvatars.length === 0 && ownedThemes.length === 0 && ownedBadges.length === 0 && (
+                  <div className="text-center py-8">
+                    <ShoppingBag className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                      No Items Yet
+                    </h4>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                      Visit the shop to purchase customization items!
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Earned 50 Surge Coins
-                    </p>
+                    <Button onClick={() => window.location.href = '/shop'}>
+                      <ShoppingBag className="h-4 w-4 mr-2" />
+                      Visit Shop
+                    </Button>
                   </div>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                    2 hours ago
-                  </span>
-                </div>
-
-                <div className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                  <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                    <Star className="h-5 w-5 text-blue-500" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      Achieved high score in Pixel Runner
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      New personal best: 15,420 points
-                    </p>
-                  </div>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                    5 hours ago
-                  </span>
-                </div>
-
-                <div className="flex items-center space-x-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                  <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                    <TrendingUp className="h-5 w-5 text-purple-500" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-medium text-gray-900 dark:text-white">
-                      Leveled up to Level {profileData.level}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Unlocked new customization options
-                    </p>
-                  </div>
-                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                    1 day ago
-                  </span>
-                </div>
+                )}
               </div>
             </div>
           </motion.div>
@@ -458,30 +444,6 @@ export const Profile: React.FC = () => {
             transition={{ delay: 0.2 }}
             className="space-y-8"
           >
-            {/* Recent Achievements */}
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-                Recent Achievements
-              </h3>
-              <div className="space-y-3">
-                {recentAchievements.map((achievement) => (
-                  <div key={achievement.id} className="flex items-center space-x-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                    <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-                      <Award className="h-5 w-5 text-yellow-500" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium text-gray-900 dark:text-white text-sm">
-                        {achievement.title}
-                      </p>
-                      <p className="text-xs text-gray-600 dark:text-gray-400">
-                        +{achievement.reward} coins
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Quick Stats */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
               <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
@@ -489,21 +451,27 @@ export const Profile: React.FC = () => {
               </h3>
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Games Played</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">127</span>
+                  <span className="text-gray-600 dark:text-gray-400">Experience</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {profile?.experience_points || 0} XP
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Total Playtime</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">48h 32m</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {Math.floor((profile?.total_playtime || 0) / 60)}h {(profile?.total_playtime || 0) % 60}m
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">Challenges Completed</span>
-                  <span className="font-semibold text-gray-900 dark:text-white">23</span>
+                  <span className="text-gray-600 dark:text-gray-400">Games Played</span>
+                  <span className="font-semibold text-gray-900 dark:text-white">
+                    {profile?.games_played || 0}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-gray-600 dark:text-gray-400">Member Since</span>
                   <span className="font-semibold text-gray-900 dark:text-white">
-                    {mockUser.createdAt.toLocaleDateString()}
+                    {profile?.created_at ? new Date(profile.created_at).toLocaleDateString() : 'N/A'}
                   </span>
                 </div>
               </div>

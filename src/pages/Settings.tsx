@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Settings as SettingsIcon, 
@@ -17,26 +17,18 @@ import {
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 import { useAuth } from '../hooks/useAuth';
-import { mockUser } from '../data/mockData';
+import { useUserData } from '../hooks/useUserData';
 import { deleteUser, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 
 export const Settings: React.FC = () => {
   const { user, logout } = useAuth();
+  const { settings, updateSettings, loading } = useUserData();
   const [activeTab, setActiveTab] = useState('account');
   
-  // Notification settings
-  const [notificationSettings, setNotificationSettings] = useState({
-    pushEnabled: true,
-    newGames: true,
-    achievements: true,
-    challenges: false,
-    dailyChallenges: true,
-    emailNotifications: true,
-    weeklyDigest: false,
-    promotions: true
-  });
-
+  // Local settings state
+  const [localSettings, setLocalSettings] = useState(settings);
+  
   // Account settings
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
@@ -53,11 +45,12 @@ export const Settings: React.FC = () => {
   });
   const [passwordChangeStatus, setPasswordChangeStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
 
-  // Email settings
-  const [emailSettings, setEmailSettings] = useState({
-    newEmail: mockUser.email,
-    currentPassword: ''
-  });
+  // Update local settings when data loads
+  useEffect(() => {
+    if (settings) {
+      setLocalSettings(settings);
+    }
+  }, [settings]);
 
   const tabs = [
     { id: 'account', label: 'Account', icon: User },
@@ -67,11 +60,17 @@ export const Settings: React.FC = () => {
   ];
 
   const handleSaveSettings = async () => {
+    if (!localSettings) return;
+    
     setSaveStatus('saving');
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setSaveStatus('saved');
-    setTimeout(() => setSaveStatus('idle'), 2000);
+    try {
+      await updateSettings(localSettings);
+      setSaveStatus('saved');
+      setTimeout(() => setSaveStatus('idle'), 2000);
+    } catch (error) {
+      console.error('Error saving settings:', error);
+      setSaveStatus('idle');
+    }
   };
 
   const handlePasswordChange = async () => {
@@ -147,16 +146,29 @@ export const Settings: React.FC = () => {
   };
 
   const handleNotificationToggle = (setting: string) => {
-    setNotificationSettings(prev => ({
+    if (!localSettings) return;
+    
+    setLocalSettings(prev => prev ? {
       ...prev,
       [setting]: !prev[setting as keyof typeof prev]
-    }));
+    } : null);
   };
 
   const sendBulkEmail = async () => {
     // This would integrate with your email service
     alert('Bulk email feature would be implemented with your email service provider (SendGrid, Mailgun, etc.)');
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-primary-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading settings...</p>
+        </div>
+      </div>
+    );
+  }
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -174,9 +186,9 @@ export const Settings: React.FC = () => {
                   </label>
                   <Input
                     type="email"
-                    value={emailSettings.newEmail}
-                    onChange={(e) => setEmailSettings({...emailSettings, newEmail: e.target.value})}
-                    placeholder="Enter new email"
+                    value={user?.email || ''}
+                    disabled
+                    className="bg-gray-100 dark:bg-gray-700"
                   />
                 </div>
                 <div>
@@ -185,16 +197,6 @@ export const Settings: React.FC = () => {
                   </label>
                   <Input
                     value={user?.uid || ''}
-                    disabled
-                    className="bg-gray-100 dark:bg-gray-700"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Account Created
-                  </label>
-                  <Input
-                    value={mockUser.createdAt.toLocaleDateString()}
                     disabled
                     className="bg-gray-100 dark:bg-gray-700"
                   />
@@ -273,8 +275,8 @@ export const Settings: React.FC = () => {
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
-                      checked={notificationSettings.pushEnabled}
-                      onChange={() => handleNotificationToggle('pushEnabled')}
+                      checked={localSettings?.push_enabled || false}
+                      onChange={() => handleNotificationToggle('push_enabled')}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 dark:peer-focus:ring-primary-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-primary-600"></div>
@@ -286,17 +288,17 @@ export const Settings: React.FC = () => {
                   <h4 className="font-medium text-gray-900 dark:text-white">Notification Types</h4>
                   <div className="space-y-3">
                     {[
-                      { key: 'newGames', label: 'New game releases' },
+                      { key: 'new_games', label: 'New game releases' },
                       { key: 'achievements', label: 'Achievement unlocks' },
                       { key: 'challenges', label: 'Challenge completions' },
-                      { key: 'dailyChallenges', label: 'Daily challenges' }
+                      { key: 'daily_challenges', label: 'Daily challenges' }
                     ].map(({ key, label }) => (
                       <div key={key} className="flex items-center justify-between">
                         <span className="text-gray-700 dark:text-gray-300">{label}</span>
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input
                             type="checkbox"
-                            checked={notificationSettings[key as keyof typeof notificationSettings] as boolean}
+                            checked={localSettings?.[key as keyof typeof localSettings] as boolean || false}
                             onChange={() => handleNotificationToggle(key)}
                             className="sr-only peer"
                           />
@@ -312,8 +314,8 @@ export const Settings: React.FC = () => {
                   <h4 className="font-medium text-gray-900 dark:text-white">Email Notifications</h4>
                   <div className="space-y-3">
                     {[
-                      { key: 'emailNotifications', label: 'Email notifications' },
-                      { key: 'weeklyDigest', label: 'Weekly digest' },
+                      { key: 'email_notifications', label: 'Email notifications' },
+                      { key: 'weekly_digest', label: 'Weekly digest' },
                       { key: 'promotions', label: 'Promotions and updates' }
                     ].map(({ key, label }) => (
                       <div key={key} className="flex items-center justify-between">
@@ -321,7 +323,7 @@ export const Settings: React.FC = () => {
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input
                             type="checkbox"
-                            checked={notificationSettings[key as keyof typeof notificationSettings] as boolean}
+                            checked={localSettings?.[key as keyof typeof localSettings] as boolean || false}
                             onChange={() => handleNotificationToggle(key)}
                             className="sr-only peer"
                           />
