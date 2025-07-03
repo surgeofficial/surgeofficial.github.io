@@ -24,6 +24,8 @@ export interface Game {
   title: string;
   description: string;
   thumbnail: string;
+  preview?: string; // Path to preview video or image
+  previewType?: 'video' | 'image'; // Type of preview content
   category: string;
   tags: string[];
   rating: number;

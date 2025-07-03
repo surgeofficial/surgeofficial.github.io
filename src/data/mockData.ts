@@ -6,6 +6,8 @@ export const mockGames: Game[] = [
     title: 'Basketball Random',
     description: 'Fast-paced basketball game with retro pixel graphics',
     thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
     category: 'Sports',
     tags: ['basketball', 'pixel', 'sports'],
     rating: 4,
@@ -19,10 +21,14 @@ export const mockGames: Game[] = [
   // ADD YOUR NEW GAMES HERE - Just copy this template:
   /*
   {
-    id: '7', // Increment the number
+    id: '4', // Increment the number
     title: 'Your Game Name',
     description: 'Description of your game',
-    thumbnail: 'https://your-image-url.com/thumbnail.jpg', // Or use a Pexels image
+    thumbnail: '/games/your-game-folder/thumbnail.jpg', // For local images in public folder
+    preview: '/games/your-game-folder/preview.mp4', // For preview video
+    previewType: 'video', // 'video' or 'image'
+    // OR
+    thumbnail: 'https://images.pexels.com/photos/XXXXX/image.jpeg?auto=compress&cs=tinysrgb&w=400', // For Pexels images
     category: 'Action', // Action, Puzzle, Adventure, Strategy, Music, Sports, etc.
     tags: ['tag1', 'tag2', 'tag3'],
     rating: 4.5, // 0-5 stars
@@ -94,7 +100,7 @@ export const mockChallenges: Challenge[] = [
     completed: false,
     progress: 0,
     difficulty: 'Medium',
-    category: ''
+    category: 'Gaming'
   },
   {
     id: '2',
@@ -107,7 +113,7 @@ export const mockChallenges: Challenge[] = [
     completed: false,
     progress: 0,
     difficulty: 'Medium',
-    category: ''
+    category: 'Exploration'
   },
 ];
 
