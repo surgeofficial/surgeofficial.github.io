@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
+  Settings as SettingsIcon, 
   User, 
   Bell, 
   Shield, 
@@ -18,6 +19,7 @@ import { Input } from '../components/ui/Input';
 import { useAuth } from '../hooks/useAuth';
 import { useUserData } from '../hooks/useUserData';
 import { deleteUser, reauthenticateWithCredential, EmailAuthProvider, updatePassword } from 'firebase/auth';
+import { auth } from '../lib/firebase';
 
 export const Settings: React.FC = () => {
   const { user, logout } = useAuth();
