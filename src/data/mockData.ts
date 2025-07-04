@@ -1,5 +1,5 @@
 import { Game, Achievement, Challenge, GameCategory, User } from '../types';
-
+53
 export const mockGames: Game[] = [
   {
     id: '1',
@@ -18,6 +18,330 @@ export const mockGames: Game[] = [
     difficulty: 'Medium',
     createdAt: new Date('6-24-2025'),
   },
+  {
+    id: '2',
+    title: '8 Ball Pool',
+    description: 'Nice and calming game of pool.',
+    thumbnail: '/games/8-ball/IMG_2666.png',
+    preview: '/games/8-ball/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['calm', 'pool', 'sports'],
+    rating: 3.5,
+    plays: 0,
+    url: '/games/8-ball/index.html',
+    featured: false,
+    new: true,
+    difficulty: 'Easy',
+    createdAt: new Date('7-4-2025'),
+  },
+  {
+    id: '3',
+    title: '2048',
+    description: 'A fun number game that can be played calmly or strategically.',
+    thumbnail: '/games/2048/favicon.ico',
+    preview: '/games/2048/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Puzzle',
+    tags: ['puzzle','numbers', 'strategic'],
+    rating: 3.5,
+    plays: 0,
+    url: '/games/2048/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Easy',
+    createdAt: new Date('7-4-2025'),
+  },
+  {
+    id: '4',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '5',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '6',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '7',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '8',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '9',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '10',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '11',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '12',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '13',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '14',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '15',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '16',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '17',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '18',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '19',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+  {
+    id: '20',
+    title: 'Basketball Random',
+    description: 'Fast-paced basketball game with retro pixel graphics',
+    thumbnail: '/games/basketballRandom/splash.jpeg',
+    preview: '/games/basketballRandom/preview.mp4', // Add your preview video here
+    previewType: 'video', // or 'image' if you use a preview image
+    category: 'Sports',
+    tags: ['basketball', 'pixel', 'sports'],
+    rating: 4,
+    plays: 0,
+    url: '/games/basketballRandom/index.html',
+    featured: true,
+    new: true,
+    difficulty: 'Medium',
+    createdAt: new Date('6-24-2025'),
+  },
+
   // ADD YOUR NEW GAMES HERE - Just copy this template:
   /*
   {
